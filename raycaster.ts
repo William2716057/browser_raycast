@@ -1,14 +1,11 @@
-// ============================================================
-// Explorable Room — Wolfenstein-style Raycaster (TypeScript)
-// DDA raycasting, distance-shaded walls, minimap, WASD + mouse look
-// ============================================================
+
 
 interface Vec2 {
   x: number;
   y: number;
 }
 
-// 0 = empty floor, >0 = wall (value selects a wall colour)
+// 0 = empty floor, >0 = wall (values select wall colour)
 const MAP: number[][] = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -30,8 +27,8 @@ const MAP: number[][] = [
 
 const MAP_W = MAP[0].length;
 const MAP_H = MAP.length;
-
-const WALL_COLORS: Record<number, string> = {
+//colours
+const WALL_COLORS: Record<number, string> = { //add more or change to textures
   1: "#8a4b3c",
   2: "#3c6e8a",
   3: "#4b8a3c",
@@ -45,7 +42,7 @@ function isWall(x: number, y: number): boolean {
   if (mx < 0 || my < 0 || mx >= MAP_W || my >= MAP_H) return true;
   return MAP[my][mx] > 0;
 }
-
+//player
 class Player {
   pos: Vec2 = { x: 8, y: 12.5 };
   angle: number = -Math.PI / 2; // facing "up" initially
@@ -54,7 +51,6 @@ class Player {
   radius = 0.2;
 
   tryMove(dx: number, dy: number): void {
-    // Slide along walls: test each axis independently.
     if (!isWall(this.pos.x + dx + Math.sign(dx) * this.radius, this.pos.y)) {
       this.pos.x += dx;
     }
@@ -71,7 +67,7 @@ interface RayHit {
   wallX: number; // fractional position along the hit wall face, for texturing
 }
 
-// Classic DDA (digital differential analysis) raycast against the grid.
+//raycast against the grid.
 function castRay(origin: Vec2, angle: number): RayHit {
   const rayDirX = Math.cos(angle);
   const rayDirY = Math.sin(angle);
@@ -127,7 +123,7 @@ function castRay(origin: Vec2, angle: number): RayHit {
     }
   }
 
-  // Perpendicular distance avoids fish-eye distortion.
+  // Perpendicular distance to fish-eye distortion.
   let perpDist: number;
   let wallX: number;
   if (side === 0) {
@@ -211,7 +207,7 @@ class RaycastEngine {
     const { ctx, width, height, player } = this;
 
     // Ceiling and floor
-    ctx.fillStyle = "#1b1f2a";
+    ctx.fillStyle = "#1b1f2a"; //add texture
     ctx.fillRect(0, 0, width, height / 2);
     ctx.fillStyle = "#2a2620";
     ctx.fillRect(0, height / 2, width, height / 2);
@@ -279,7 +275,7 @@ class RaycastEngine {
     );
     ctx.stroke();
   }
-
+  //edit here
   private renderCrosshair(): void {
     const { ctx, width, height } = this;
     ctx.strokeStyle = "rgba(255,255,255,0.6)";
